@@ -7,6 +7,7 @@ use App\Models\Order;
 
 class CheckoutController extends Controller
 {
+    // SIMPAN PESANAN
     public function store(Request $request)
     {
         Order::create([
@@ -14,11 +15,20 @@ class CheckoutController extends Controller
             'nama' => $request->nama,
             'alamat' => $request->alamat,
             'total' => $request->total,
-            'produk' => $request->produk
+            'produk' => $request->produk,
+            'status' => 'Diproses'
 
         ]);
 
-        return redirect('/')
+        return redirect('/pesanan-saya')
         ->with('success', 'Pesanan berhasil dibuat');
+    }
+
+    // HALAMAN PESANAN PEMBELI
+    public function pesananSaya()
+    {
+        $orders = Order::latest()->get();
+
+        return view('pesanan_saya', compact('orders'));
     }
 }

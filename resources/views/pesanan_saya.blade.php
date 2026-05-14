@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>Data Pesanan</title>
+    <title>Pesanan Saya</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -20,18 +20,28 @@
 
             <h2 class="fw-bold">
 
-                Data Pesanan Pembeli
+                Status Pesanan Saya
 
             </h2>
 
-            <a href="/admin/dashboard"
-            class="btn btn-primary">
+            <a href="/"
+            class="btn btn-dark">
 
-                Dashboard
+                Kembali
 
             </a>
 
         </div>
+
+        @if(session('success'))
+
+            <div class="alert alert-success">
+
+                {{ session('success') }}
+
+            </div>
+
+        @endif
 
         <table class="table table-bordered align-middle">
 
@@ -43,10 +53,7 @@
                     <th>Nama</th>
                     <th>Alamat</th>
                     <th>Total</th>
-                    <th>Produk</th>
                     <th>Status</th>
-                    <th>Tanggal</th>
-                    <th>Aksi</th>
 
                 </tr>
 
@@ -80,37 +87,6 @@
 
                     <td>
 
-                @php
-                    $produk = json_decode($order->produk, true);
-                @endphp
-
-                @if($produk)
-
-                    @foreach($produk as $nama => $qty)
-
-                        <div>
-
-                            {{ $nama }}
-                            ({{ $qty }})
-
-                        </div>
-
-                    @endforeach
-
-                @else
-
-                    <span class="text-danger">
-
-                        Produk lama tidak tersedia
-
-                    </span>
-
-                @endif
-
-                    </td>
-
-                    <td>
-
                         @if($order->status == 'Diproses')
 
                             <span class="badge bg-warning text-dark">
@@ -139,66 +115,11 @@
 
                             <span class="badge bg-success">
 
-                                Selesai
+                                Selesai & Sudah Dibayar
 
                             </span>
 
                         @endif
-
-                    </td>
-
-                    <td>
-
-                        {{ $order->created_at }}
-
-                    </td>
-
-                    <td>
-
-                        <form
-                        action="/admin/update-status/{{ $order->id }}"
-                        method="POST">
-
-                            @csrf
-
-                            <select
-                            name="status"
-                            class="form-select mb-2">
-
-                                <option value="Diproses">
-
-                                    Diproses
-
-                                </option>
-
-                                <option value="Dikemas">
-
-                                    Dikemas
-
-                                </option>
-
-                                <option value="Dikirim">
-
-                                    Dikirim
-
-                                </option>
-
-                                <option value="Selesai">
-
-                                    Selesai
-
-                                </option>
-
-                            </select>
-
-                            <button
-                            class="btn btn-success btn-sm w-100">
-
-                                Update
-
-                            </button>
-
-                        </form>
 
                     </td>
 

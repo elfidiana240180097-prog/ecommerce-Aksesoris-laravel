@@ -93,3 +93,7 @@ Route::get('/admin/hapus-produk/{id}',
 
 Route::get('/admin/pesanan',
 [AdminOrderController::class, 'index']);
+
+Route::post('/admin/update-status/{id}', [AdminOrderController::class, 'updateStatus']);
+
+Route::get('/pesanan-saya', [CheckoutController::class, 'pesananSaya']);
