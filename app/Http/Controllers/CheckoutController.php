@@ -12,11 +12,17 @@ class CheckoutController extends Controller
     {
         Order::create([
 
-            'nama' => $request->nama,
+            'nama_pembeli' => $request->nama,
+
             'alamat' => $request->alamat,
-            'total' => $request->total,
+
+            'total_harga' => $request->total,
+
             'produk' => $request->produk,
-            'status' => 'Diproses'
+
+            'status' => 'Diproses',
+
+            'tanggal' => now()
 
         ]);
 
@@ -24,10 +30,10 @@ class CheckoutController extends Controller
         ->with('success', 'Pesanan berhasil dibuat');
     }
 
-    // HALAMAN PESANAN PEMBELI
+    // HALAMAN PESANAN SAYA
     public function pesananSaya()
     {
-        $orders = Order::latest()->get();
+        $orders = Order::orderBy('tanggal', 'desc')->get();
 
         return view('pesanan_saya', compact('orders'));
     }

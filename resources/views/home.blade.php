@@ -47,6 +47,13 @@
 
             </a>
 
+            <a class="text-dark text-decoration-none me-4 fw-semibold"
+            href="/pesanan-saya">
+
+                Pesanan Saya
+
+            </a>
+
             <a class="btn btn-sm px-4 btn-checkout"
             href="/checkout">
 
@@ -119,49 +126,78 @@
 
     </h3>
 
-    <div class="row">
+<div class="row">
 
-        @foreach($products as $data)
+    @foreach($products as $data)
 
-        <div class="col-md-3 produk-item">
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4 produk-item">
+        <div class="card produk-card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
 
-            <div class="card p-3 mb-4">
+            <div class="produk-image">
 
                 <img
                 src="/images/{{ $data->gambar }}"
                 class="card-img-top">
 
+            </div>
+
+            <div class="card-body">
+
                 <a href="/detail/{{ $data->id }}"
                 class="text-decoration-none">
 
-                <h5 class="mt-2">
-                    {{ $data->nama_produk }}
-                </h5>
+                    <h5 class="produk-title">
+
+                        {{ $data->nama_produk }}
+
+                    </h5>
 
                 </a>
 
-                <p>
+                <p class="produk-harga">
+
                     Rp {{ number_format($data->harga) }}
+
                 </p>
 
-                <button
-                class="btn btn-primary"
-                onclick="tambah(
-                '{{ $data->nama_produk }}',
-                {{ $data->harga }}
-                )">
+                <div class="d-grid gap-2">
 
-                    Tambah
+                    <!-- TOMBOL KERANJANG -->
 
-                </button>
+                    <button
+                    class="btn btn-primary rounded-pill"
+                    onclick="tambah(
+                    '{{ $data->nama_produk }}',
+                    {{ $data->harga }}
+                    )">
+
+                        + Keranjang
+
+                    </button>
+
+                    <!-- TOMBOL BELI -->
+
+                    <button
+                    class="btn btn-outline-primary rounded-pill"
+                    onclick="beliSekarang(
+                    '{{ $data->nama_produk }}'
+                    )">
+
+                        Beli Sekarang
+
+                    </button>
+
+                </div>
 
             </div>
 
         </div>
 
-        @endforeach
-
     </div>
+
+    @endforeach
+
+</div>
 
 </div>
 
@@ -207,6 +243,20 @@ function updateKeranjang() {
 
 }
 
+function beliSekarang(nama) {
+
+    let dataCheckout = {};
+
+    dataCheckout[nama] = 1;
+
+    localStorage.setItem(
+    "keranjang",
+    JSON.stringify(dataCheckout)
+    );
+
+    window.location.href = "/checkout";
+}
+
 function tambah(nama, harga) {
 
     total += harga;
@@ -249,26 +299,30 @@ function tambah(nama, harga) {
 function cariProduk() {
 
     let input =
-    document.getElementById("search").value.toLowerCase();
+    document.getElementById("search")
+    .value
+    .toLowerCase();
 
     let produk =
-    document.getElementsByClassName("produk-item");
+    document.querySelectorAll(".produk-item");
 
-    for(let i = 0; i < produk.length; i++) {
+    produk.forEach(function(item){
 
-        let namaProduk =
-        produk[i].innerText.toLowerCase();
+        let nama =
+        item.innerText.toLowerCase();
 
-        if(namaProduk.includes(input)) {
+        if(nama.includes(input)) {
 
-            produk[i].style.display = "block";
+            item.style.display = "block";
 
         } else {
 
-            produk[i].style.display = "none";
+            item.style.display = "none";
 
         }
-    }
+
+    });
+
 }
 
 updateKeranjang();

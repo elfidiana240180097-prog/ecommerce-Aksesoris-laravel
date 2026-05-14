@@ -51,8 +51,7 @@
 
         <p class="mt-2">
 
-            Selamat datang,
-            <b>{{ session('nama') }}</b>
+            Selamat datang
 
         </p>
 

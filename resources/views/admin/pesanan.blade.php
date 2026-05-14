@@ -4,13 +4,36 @@
 
     <title>Data Pesanan</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 
 </head>
 
-<body style="background:#f5f7fb;">
+<body style="background:#f1f5f9;">
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold fs-3 logo-brand">
+
+            GlowStyle Admin
+
+        </a>
+
+        <a href="/admin/dashboard"
+        class="btn btn-dark px-4">
+
+            Dashboard
+
+        </a>
+
+    </div>
+
+</nav>
 
 <div class="container mt-5">
 
@@ -18,197 +41,246 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
 
-            <h2 class="fw-bold">
+            <div>
 
-                Data Pesanan Pembeli
+                <h2 class="fw-bold mb-1">
 
-            </h2>
+                    Data Pesanan
 
-            <a href="/admin/dashboard"
-            class="btn btn-primary">
+                </h2>
 
-                Dashboard
+                <p class="text-secondary mb-0">
 
-            </a>
+                    Kelola status pesanan pembeli
+
+                </p>
+
+            </div>
+
+            <div class="bg-primary text-white px-4 py-3 rounded-4 text-center">
+
+                <h5 class="mb-0">
+
+                    {{ count($orders) }}
+
+                </h5>
+
+                <small>Total Pesanan</small>
+
+            </div>
 
         </div>
 
-        <table class="table table-bordered align-middle">
+        <div class="table-responsive">
 
-            <thead class="table-dark">
+            <table class="table align-middle table-hover">
 
-                <tr>
+                <thead class="table-dark">
 
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Alamat</th>
-                    <th>Total</th>
-                    <th>Produk</th>
-                    <th>Status</th>
-                    <th>Tanggal</th>
-                    <th>Aksi</th>
+                    <tr>
 
-                </tr>
+                        <th>No</th>
+                        <th>Pembeli</th>
+                        <th>Alamat</th>
+                        <th>Produk</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                        <th width="220">Update</th>
 
-            </thead>
+                    </tr>
 
-            <tbody>
+                </thead>
 
-                @foreach($orders as $order)
+                <tbody>
 
-                <tr>
+                    @forelse($orders as $order)
 
-                    <td>{{ $loop->iteration }}</td>
+                    <tr>
 
-                    <td>
+                        <td>
 
-                        {{ $order->nama }}
+                            {{ $loop->iteration }}
 
-                    </td>
+                        </td>
 
-                    <td>
+                        <td>
 
-                        {{ $order->alamat }}
+                            <div class="fw-bold">
 
-                    </td>
+                                {{ $order->nama_pembeli }}
 
-                    <td>
+                            </div>
 
-                        Rp {{ number_format($order->total) }}
+                        </td>
 
-                    </td>
+                        <td>
 
-                    <td>
+                            {{ $order->alamat }}
 
-                @php
-                    $produk = json_decode($order->produk, true);
-                @endphp
+                        </td>
 
-                @if($produk)
+                        <td>
 
-                    @foreach($produk as $nama => $qty)
+                            @php
+                                $produk = json_decode($order->produk, true);
+                            @endphp
 
-                        <div>
+                            @if($produk)
 
-                            {{ $nama }}
-                            ({{ $qty }})
+                                @foreach($produk as $nama => $qty)
 
-                        </div>
+                                    <div class="mb-1">
 
-                    @endforeach
+                                        <span class="badge bg-light text-dark border">
 
-                @else
+                                            {{ $nama }} ({{ $qty }})
+                                        </span>
 
-                    <span class="text-danger">
+                                    </div>
 
-                        Produk lama tidak tersedia
+                                @endforeach
 
-                    </span>
+                            @else
 
-                @endif
+                                <span class="text-danger">
 
-                    </td>
+                                    Produk tidak tersedia
 
-                    <td>
+                                </span>
 
-                        @if($order->status == 'Diproses')
+                            @endif
 
-                            <span class="badge bg-warning text-dark">
+                        </td>
 
-                                Diproses
+                        <td>
 
-                            </span>
+                            <span class="fw-bold text-primary">
 
-                        @elseif($order->status == 'Dikemas')
-
-                            <span class="badge bg-info">
-
-                                Dikemas
+                                Rp {{ number_format($order->total_harga) }}
 
                             </span>
 
-                        @elseif($order->status == 'Dikirim')
+                        </td>
 
-                            <span class="badge bg-primary">
+                        <td>
 
-                                Dikirim
+                            @if($order->status == 'Diproses')
 
-                            </span>
-
-                        @else
-
-                            <span class="badge bg-success">
-
-                                Selesai
-
-                            </span>
-
-                        @endif
-
-                    </td>
-
-                    <td>
-
-                        {{ $order->created_at }}
-
-                    </td>
-
-                    <td>
-
-                        <form
-                        action="/admin/update-status/{{ $order->id }}"
-                        method="POST">
-
-                            @csrf
-
-                            <select
-                            name="status"
-                            class="form-select mb-2">
-
-                                <option value="Diproses">
+                                <span class="badge bg-warning text-dark px-3 py-2">
 
                                     Diproses
 
-                                </option>
+                                </span>
 
-                                <option value="Dikemas">
+                            @elseif($order->status == 'Dikemas')
+
+                                <span class="badge bg-info px-3 py-2">
 
                                     Dikemas
 
-                                </option>
+                                </span>
 
-                                <option value="Dikirim">
+                            @elseif($order->status == 'Dikirim')
+
+                                <span class="badge bg-primary px-3 py-2">
 
                                     Dikirim
 
-                                </option>
+                                </span>
 
-                                <option value="Selesai">
+                            @else
+
+                                <span class="badge bg-success px-3 py-2">
 
                                     Selesai
 
-                                </option>
+                                </span>
 
-                            </select>
+                            @endif
 
-                            <button
-                            class="btn btn-success btn-sm w-100">
+                        </td>
 
-                                Update
+                        <td>
 
-                            </button>
+                            {{ $order->tanggal }}
 
-                        </form>
+                        </td>
 
-                    </td>
+                        <td>
 
-                </tr>
+                            <form
+                            action="/admin/update-status/{{ $order->id }}"
+                            method="POST">
 
-                @endforeach
+                                @csrf
 
-            </tbody>
+                                <select
+                                name="status"
+                                class="form-select mb-2">
 
-        </table>
+                                    <option value="Diproses"
+                                    {{ $order->status == 'Diproses' ? 'selected' : '' }}>
+
+                                        Diproses
+
+                                    </option>
+
+                                    <option value="Dikemas"
+                                    {{ $order->status == 'Dikemas' ? 'selected' : '' }}>
+
+                                        Dikemas
+
+                                    </option>
+
+                                    <option value="Dikirim"
+                                    {{ $order->status == 'Dikirim' ? 'selected' : '' }}>
+
+                                        Dikirim
+
+                                    </option>
+
+                                    <option value="Selesai"
+                                    {{ $order->status == 'Selesai' ? 'selected' : '' }}>
+
+                                        Selesai
+
+                                    </option>
+
+                                </select>
+
+                                <button
+                                class="btn btn-success w-100">
+
+                                    Update Status
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="8" class="text-center py-4">
+
+                            Belum ada pesanan
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
 

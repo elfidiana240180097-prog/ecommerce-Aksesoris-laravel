@@ -118,6 +118,41 @@
                     name="produk"
                     id="input-produk">
 
+
+                    <div class="mb-4">
+
+    <label class="fw-semibold mb-2">
+
+        Metode Pembayaran
+
+    </label>
+
+    <div class="card border-0 bg-light rounded-4 p-3">
+
+        <div class="form-check">
+
+            <input
+            class="form-check-input"
+            type="radio"
+            checked>
+
+            <label class="form-check-label fw-semibold">
+
+                Cash On Delivery (COD)
+
+            </label>
+
+        </div>
+
+        <small class="text-secondary">
+
+            Pembayaran dilakukan saat paket diterima.
+
+        </small>
+
+    </div>
+
+</div>
                     <button
                     class="btn btn-primary w-100 py-2"
                     type="submit">

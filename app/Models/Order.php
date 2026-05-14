@@ -8,14 +8,16 @@ class Order extends Model
 {
     protected $table = 'orders';
 
+    public $timestamps = false;
+
     protected $fillable = [
 
-        'nama',
+        'nama_pembeli',
         'alamat',
-        'total',
-        'produk'
+        'total_harga',
+        'produk',
+        'status',
+        'tanggal'
 
     ];
-
-    public $timestamps = false;
 }

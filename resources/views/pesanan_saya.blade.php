@@ -10,126 +10,209 @@
 
 </head>
 
-<body style="background:#f5f7fb;">
+<body style="background:#f4f8ff;">
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3 border-bottom">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold fs-3"
+        style="color:#2563eb;">
+
+            GlowStyle
+
+        </a>
+
+        <a href="/"
+        class="btn rounded-pill px-4 fw-semibold"
+        style="background:#2563eb; color:white;">
+
+            Kembali
+
+        </a>
+
+    </div>
+
+</nav>
 
 <div class="container mt-5">
 
-    <div class="card border-0 shadow-lg rounded-4 p-4">
+    <div class="mb-4">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"
+        style="color:#1e293b;">
 
-            <h2 class="fw-bold">
+            Pesanan Saya
 
-                Status Pesanan Saya
+        </h2>
 
-            </h2>
+        <p style="color:#64748b;">
 
-            <a href="/"
-            class="btn btn-dark">
+            Pantau status pesanan dan pembayaran COD Anda
 
-                Kembali
+        </p>
 
-            </a>
+    </div>
+
+    @if(session('success'))
+
+        <div class="alert border-0 shadow-sm rounded-4"
+        style="background:#dbeafe; color:#1d4ed8;">
+
+            {{ session('success') }}
 
         </div>
 
-        @if(session('success'))
+    @endif
 
-            <div class="alert alert-success">
+    <div class="table-responsive">
 
-                {{ session('success') }}
+        <div class="bg-white p-3 rounded-4 shadow-sm border"
+        style="border-color:#dbeafe !important;">
 
-            </div>
+            <table class="table align-middle mb-0">
 
-        @endif
+                <thead>
 
-        <table class="table table-bordered align-middle">
+                    <tr style="color:#334155;">
 
-            <thead class="table-dark">
+                        <th class="py-3">No</th>
+                        <th>Detail Pesanan</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Pembayaran</th>
+                        <th>Tanggal</th>
 
-                <tr>
+                    </tr>
 
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Alamat</th>
-                    <th>Total</th>
-                    <th>Status</th>
+                </thead>
 
-                </tr>
+                <tbody>
 
-            </thead>
+                    @foreach($orders as $order)
 
-            <tbody>
+                    <tr style="border-color:#eff6ff;">
 
-                @foreach($orders as $order)
+                        <td>
 
-                <tr>
+                            {{ $loop->iteration }}
 
-                    <td>{{ $loop->iteration }}</td>
+                        </td>
 
-                    <td>
+                        <td>
 
-                        {{ $order->nama }}
+                            <div class="fw-bold mb-1"
+                            style="color:#1e293b;">
 
-                    </td>
+                                {{ $order->nama_pembeli }}
 
-                    <td>
+                            </div>
 
-                        {{ $order->alamat }}
+                            <small style="color:#64748b;">
 
-                    </td>
+                                {{ $order->alamat }}
 
-                    <td>
+                            </small>
 
-                        Rp {{ number_format($order->total) }}
+                            <div class="mt-2">
 
-                    </td>
+                                @php
+                                    $produk = json_decode($order->produk, true);
+                                @endphp
 
-                    <td>
+                                @if($produk)
 
-                        @if($order->status == 'Diproses')
+                                    @foreach($produk as $nama => $qty)
 
-                            <span class="badge bg-warning text-dark">
+                                        <span class="badge rounded-pill px-3 py-2 me-1 mb-1"
+                                        style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;">
 
-                                Diproses
+                                            {{ $nama }} x{{ $qty }}
 
+                                        </span>
+
+                                    @endforeach
+
+                                @endif
+
+                            </div>
+
+                        </td>
+
+                        <td class="fw-bold"
+                        style="color:#2563eb;">
+
+                            Rp {{ number_format($order->total_harga) }}
+
+                        </td>
+
+                        <td>
+
+                            @if($order->status == 'Diproses')
+
+                                <span class="badge rounded-pill px-3 py-2"
+                                style="background:#fef3c7; color:#92400e;">
+
+                                    Diproses
+
+                                </span>
+
+                            @elseif($order->status == 'Dikemas')
+
+                                <span class="badge rounded-pill px-3 py-2"
+                                style="background:#dbeafe; color:#1d4ed8;">
+
+                                    Dikemas
+
+                                </span>
+
+                            @elseif($order->status == 'Dikirim')
+
+                                <span class="badge rounded-pill px-3 py-2"
+                                style="background:#ede9fe; color:#7c3aed;">
+
+                                    Dikirim
+
+                                </span>
+
+                            @else
+
+                                <span class="badge rounded-pill px-3 py-2"
+                                style="background:#dcfce7; color:#15803d;">
+
+                                    Selesai
+
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge rounded-pill px-3 py-2"
+                            style="background:#ec4899;">
+
+                                COD
                             </span>
 
-                        @elseif($order->status == 'Dikemas')
+                        </td>
 
-                            <span class="badge bg-info">
+                        <td style="color:#64748b;">
 
-                                Dikemas
+                            {{ $order->tanggal }}
 
-                            </span>
+                        </td>
 
-                        @elseif($order->status == 'Dikirim')
+                    </tr>
 
-                            <span class="badge bg-primary">
+                    @endforeach
 
-                                Dikirim
+                </tbody>
 
-                            </span>
+            </table>
 
-                        @else
-
-                            <span class="badge bg-success">
-
-                                Selesai & Sudah Dibayar
-
-                            </span>
-
-                        @endif
-
-                    </td>
-
-                </tr>
-
-                @endforeach
-
-            </tbody>
-
-        </table>
+        </div>
 
     </div>
 
